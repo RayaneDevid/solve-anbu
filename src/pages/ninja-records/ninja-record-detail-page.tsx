@@ -16,6 +16,7 @@ import {
 } from '@/services/ninja-records';
 import type { Village, StatusBadge } from '@/types';
 import { VillageBadge, StatusBadgeComponent, SectionHeader, Modal, ConfirmDialog } from '@/components/ui';
+import { IconUser, IconEdit, IconTrash, IconCircle } from '@/components/icons';
 
 const VILLAGES: { value: Village; label: string }[] = [
   { value: 'konoha', label: 'Konoha' },
@@ -92,6 +93,7 @@ export default function NinjaRecordDetailPage() {
     mutationFn: () => deleteNinjaRecord(id!),
     onSuccess: () => {
       toast.success('Casier supprimé');
+      queryClient.invalidateQueries({ queryKey: ['ninja-records'] });
       navigate('/ninja-records');
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
@@ -101,6 +103,7 @@ export default function NinjaRecordDetailPage() {
     mutationFn: (badge: StatusBadge | null) => updateStatusBadge(id!, badge),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ninja-record', id] });
+      queryClient.invalidateQueries({ queryKey: ['ninja-records'] });
     },
   });
 
@@ -134,7 +137,7 @@ export default function NinjaRecordDetailPage() {
                 <img src={record.photo_url} alt={record.name} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-text-muted text-3xl">
-                  👤
+                  <IconUser />
                 </div>
               )}
             </div>
@@ -155,14 +158,14 @@ export default function NinjaRecordDetailPage() {
                 className="p-2 bg-[#2a2a2a] hover:bg-[#333] text-text-primary transition-colors cursor-pointer"
                 title="Modifier"
               >
-                ✏️
+                <IconEdit />
               </button>
               <button
                 onClick={() => setDeleteConfirmOpen(true)}
                 className="p-2 bg-accent hover:bg-accent-hover text-white transition-colors cursor-pointer"
                 title="Supprimer"
               >
-                🗑️
+                <IconTrash />
               </button>
             </div>
           )}
@@ -176,13 +179,13 @@ export default function NinjaRecordDetailPage() {
               <button
                 key={badge ?? 'none'}
                 onClick={() => statusMutation.mutate(badge)}
-                className={`px-3 py-1 text-xs border transition-colors cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs border transition-colors cursor-pointer ${
                   record.status_badge === badge
                     ? 'border-accent text-accent bg-accent/10'
                     : 'border-border text-text-secondary hover:border-accent/50'
                 }`}
               >
-                {badge === null ? 'Aucun' : badge === 'surveillance' ? '🟡 À surveiller' : badge === 'traque' ? '🔴 À traquer' : '⚫ Mort'}
+                {badge === null ? 'Aucun' : badge === 'surveillance' ? <><IconCircle fill="#eab308" /> À surveiller</> : badge === 'traque' ? <><IconCircle fill="#ef4444" /> À traquer</> : <><IconCircle fill="#888" /> Mort</>}
               </button>
             ))}
           </div>
@@ -274,7 +277,7 @@ export default function NinjaRecordDetailPage() {
                       className="text-text-muted hover:text-accent shrink-0 cursor-pointer"
                       title="Supprimer cette information"
                     >
-                      🗑️
+                      <IconTrash />
                     </button>
                   )}
                 </div>
@@ -306,6 +309,7 @@ export default function NinjaRecordDetailPage() {
           record={record}
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: ['ninja-record', id] });
+            queryClient.invalidateQueries({ queryKey: ['ninja-records'] });
             setEditModalOpen(false);
           }}
         />

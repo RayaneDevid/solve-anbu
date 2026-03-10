@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { fetchNinjaRecords, createNinjaRecord } from '@/services/ninja-records';
 import type { Village, StatusBadge } from '@/types';
+import { IconUser } from '@/components/icons';
 import { VillageBadge, StatusBadgeComponent, SectionHeader, Modal } from '@/components/ui';
 
 const VILLAGES: { value: Village | 'all'; label: string }[] = [
@@ -129,7 +130,7 @@ function NinjaRecordCard({ record }: { record: { id: string; name: string; villa
               <img src={record.photo_url} alt={record.name} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-text-muted text-lg">
-                👤
+                <IconUser />
               </div>
             )}
           </div>

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { AuthState, LoginResponse } from '@/types/auth';
+import { queryClient } from '@/main';
 
 const TOKEN_KEY = 'anbu_token';
 const USER_KEY = 'anbu_user';
@@ -43,6 +44,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set) => {
     logout: () => {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
+      queryClient.clear();
       set({
         token: null,
         user: null,

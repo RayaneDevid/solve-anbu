@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { fetchCodes, generateCode, revokeCode } from '@/services/admin';
 import { SectionHeader, ConfirmDialog } from '@/components/ui';
+import { IconKey } from '@/components/icons';
 import AdminLayout from '@/components/admin-layout';
 import { useState } from 'react';
 
@@ -49,7 +50,7 @@ export default function CodesPage() {
           disabled={generateMutation.isPending}
           className="flex items-center gap-2 bg-accent hover:bg-accent-hover disabled:opacity-50 text-white px-4 py-2 text-sm transition-colors cursor-pointer"
         >
-          🔑 Générer un code unique
+          <IconKey className="inline" /> Générer un code unique
         </button>
 
         {/* Available codes */}

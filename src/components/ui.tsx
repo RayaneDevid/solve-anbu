@@ -1,15 +1,17 @@
 import type { Village, StatusBadge as StatusBadgeType, UserRole } from '@/types';
+import { IconLeaf, IconWind, IconDroplet, IconMusic, IconSkull, IconSwords, IconBan, IconCircle } from '@/components/icons';
+import type { ReactNode } from 'react';
 
 // ── Village Badge ──
 
-const VILLAGE_CONFIG: Record<Village, { label: string; emoji: string; color: string }> = {
-  konoha: { label: 'Konoha', emoji: '🍃', color: '#22c55e' },
-  suna: { label: 'Suna', emoji: '🏜️', color: '#eab308' },
-  kiri: { label: 'Kiri', emoji: '💧', color: '#3b82f6' },
-  oto: { label: 'Oto', emoji: '🎵', color: '#8b5cf6' },
-  nukenin: { label: 'Nukenin', emoji: '💀', color: '#ef4444' },
-  samurai: { label: 'Samouraï', emoji: '⚔️', color: '#94a3b8' },
-  deserteur: { label: 'Déserteur', emoji: '🚫', color: '#f97316' },
+const VILLAGE_CONFIG: Record<Village, { label: string; icon: ReactNode; color: string }> = {
+  konoha: { label: 'Konoha', icon: <IconLeaf />, color: '#22c55e' },
+  suna: { label: 'Suna', icon: <IconWind />, color: '#eab308' },
+  kiri: { label: 'Kiri', icon: <IconDroplet />, color: '#3b82f6' },
+  oto: { label: 'Oto', icon: <IconMusic />, color: '#8b5cf6' },
+  nukenin: { label: 'Nukenin', icon: <IconSkull />, color: '#ef4444' },
+  samurai: { label: 'Samouraï', icon: <IconSwords />, color: '#94a3b8' },
+  deserteur: { label: 'Déserteur', icon: <IconBan />, color: '#f97316' },
 };
 
 export function VillageBadge({ village }: { village: Village }) {
@@ -23,7 +25,7 @@ export function VillageBadge({ village }: { village: Village }) {
         color: cfg.color,
       }}
     >
-      {cfg.emoji} {cfg.label}
+      {cfg.icon} {cfg.label}
     </span>
   );
 }
@@ -48,7 +50,7 @@ export function StatusBadgeComponent({ status }: { status: StatusBadgeType | nul
         color: cfg.color,
       }}
     >
-      {status === 'surveillance' ? '🟡' : status === 'traque' ? '🔴' : '⚫'} {cfg.label}
+      <IconCircle fill={cfg.color} /> {cfg.label}
     </span>
   );
 }

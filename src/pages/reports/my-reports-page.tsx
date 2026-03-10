@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { fetchMyReports, createReport, deleteReport } from '@/services/reports';
 import { SectionHeader, ConfirmDialog } from '@/components/ui';
+import { IconTrash, IconLock } from '@/components/icons';
 
 export default function MyReportsPage() {
   const queryClient = useQueryClient();
@@ -109,7 +110,7 @@ export default function MyReportsPage() {
                     className="text-text-muted hover:text-accent shrink-0 cursor-pointer"
                     title="Supprimer"
                   >
-                    🗑️
+                    <IconTrash />
                   </button>
                 </div>
                 <p className="text-sm text-text-primary mt-3 whitespace-pre-wrap">{report.content}</p>
@@ -126,7 +127,7 @@ export default function MyReportsPage() {
       {/* Privacy notice */}
       <div className="bg-[rgba(42,42,42,0.5)] border border-[rgba(139,0,0,0.2)] p-4">
         <p className="text-xs text-text-secondary">
-          🔒 Ces rapports sont privés et ne sont visibles que par vous et les Chefs ANBU.
+          <IconLock className="inline" /> Ces rapports sont privés et ne sont visibles que par vous et les Chefs ANBU.
         </p>
       </div>
 

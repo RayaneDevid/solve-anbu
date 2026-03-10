@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import { router } from './router'
 import './index.css'
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
