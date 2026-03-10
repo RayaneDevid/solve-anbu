@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0A0A0A;
+  --color-surface: #1A1A1A;
+  --color-surface-light: #222222;
+  --color-border: #2A2A2A;
+  --color-border-light: #3A3A3A;
+  --color-accent: #8B0000;
+  --color-accent-hover: #6B0000;
+  --color-accent-glow: rgba(139, 0, 0, 0.3);
+  --color-text-primary: #E0E0E0;
+  --color-text-secondary: #888888;
+  --color-text-muted: #555555;
+  --color-success: #1B4332;
+  --color-warning: #7C6A0A;
+  --color-danger: #8B0000;
+
+  --font-rajdhani: "Rajdhani", sans-serif;
+  --font-teko: "Teko", sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Focus glow */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--color-accent), 0 0 8px var(--color-accent-glow);
+}
