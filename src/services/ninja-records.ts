@@ -98,6 +98,7 @@ export async function fetchNinjaIntel(recordId: string): Promise<NinjaIntel[]> {
     content: row.content,
     submitted_by: row.submitted_by,
     created_at: row.created_at,
+    updated_at: row.updated_at,
     submitter_codename: row.users?.status === 'deactivated' ? '?' : row.users?.codename ?? '?',
   }));
 }
@@ -112,6 +113,15 @@ export async function addNinjaIntel(recordId: string, content: string): Promise<
 
   if (error) throw new Error(error.message);
   return data as NinjaIntel;
+}
+
+export async function updateNinjaIntel(id: string, content: string): Promise<void> {
+  const { error } = await supabase
+    .from('ninja_intel')
+    .update({ content })
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
 }
 
 export async function deleteNinjaIntel(id: string): Promise<void> {

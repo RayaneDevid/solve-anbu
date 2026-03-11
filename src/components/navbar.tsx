@@ -42,9 +42,18 @@ function IconLogout({ className }: { className?: string }) {
   );
 }
 
+function IconSearch({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
 const NAV_ITEMS = [
   { path: '/', label: 'Tableau de bord', icon: IconDashboard },
   { path: '/ninja-records', label: 'Casiers Ninjas', icon: IconUsers },
+  { path: '/investigations', label: 'Enquêtes', icon: IconSearch },
   { path: '/my-reports', label: 'Mon Casier Personnel', icon: IconFolder },
 ];
 
@@ -117,7 +126,7 @@ export default function Navbar() {
           )}
         </nav>
 
-        {/* User Info + Logout */}
+        {/* User Info + Actions */}
         <div className="flex items-center gap-4 shrink-0">
           <div className="text-right">
             <p className="text-sm text-text-primary leading-5">{user?.codename}</p>
@@ -125,6 +134,13 @@ export default function Navbar() {
               {isChefAnbu ? 'Chef ANBU' : 'ANBU'}
             </p>
           </div>
+          <Link
+            to="/settings"
+            className="flex items-center gap-1 px-1 py-1 text-sm text-text-secondary hover:text-accent transition-colors"
+            title="Paramètres"
+          >
+            <IconSettings />
+          </Link>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 px-1 py-1 text-sm text-text-primary hover:text-accent transition-colors cursor-pointer"

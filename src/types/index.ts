@@ -48,6 +48,7 @@ export interface NinjaIntel {
   content: string;
   submitted_by: string;
   created_at: string;
+  updated_at: string;
   // Joined field
   submitter_codename?: string | null;
 }
@@ -68,4 +69,34 @@ export interface PersonalReport {
   content: string;
   created_at: string;
   updated_at: string;
+}
+
+// ── Investigations ──
+export interface Investigation {
+  id: string;
+  title: string;
+  description: string | null;
+  photo_url: string | null;
+  status_badge: StatusBadge | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InvestigationIntel {
+  id: string;
+  investigation_id: string;
+  content: string;
+  submitted_by: string;
+  created_at: string;
+  updated_at: string;
+  submitter_codename?: string | null;
+}
+
+export interface InvestigationPhoto {
+  id: string;
+  investigation_id: string;
+  imgur_url: string;
+  added_by: string;
+  created_at: string;
 }

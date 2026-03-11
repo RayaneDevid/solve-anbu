@@ -4,32 +4,22 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/stores/auth-store';
 import {
-  fetchNinjaRecord,
-  fetchNinjaIntel,
-  fetchNinjaPhotos,
-  addNinjaIntel,
-  updateNinjaIntel,
-  deleteNinjaIntel,
-  addNinjaPhoto,
-  deleteNinjaRecord,
-  updateNinjaRecord,
-  updateStatusBadge,
-} from '@/services/ninja-records';
-import type { Village, StatusBadge } from '@/types';
-import { VillageBadge, StatusBadgeComponent, SectionHeader, Modal, ConfirmDialog } from '@/components/ui';
-import { IconUser, IconEdit, IconTrash, IconCircle } from '@/components/icons';
+  fetchInvestigation,
+  fetchInvestigationIntel,
+  fetchInvestigationPhotos,
+  addInvestigationIntel,
+  updateInvestigationIntel,
+  deleteInvestigationIntel,
+  addInvestigationPhoto,
+  deleteInvestigation,
+  updateInvestigation,
+  updateInvestigationStatusBadge,
+} from '@/services/investigations';
+import type { StatusBadge } from '@/types';
+import { StatusBadgeComponent, SectionHeader, Modal, ConfirmDialog } from '@/components/ui';
+import { IconEdit, IconTrash, IconCircle } from '@/components/icons';
 
-const VILLAGES: { value: Village; label: string }[] = [
-  { value: 'konoha', label: 'Konoha' },
-  { value: 'suna', label: 'Suna' },
-  { value: 'kiri', label: 'Kiri' },
-  { value: 'oto', label: 'Oto' },
-  { value: 'nukenin', label: 'Nukenin' },
-  { value: 'samurai', label: 'Samouraï' },
-  { value: 'deserteur', label: 'Déserteur' },
-];
-
-export default function NinjaRecordDetailPage() {
+export default function InvestigationDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -44,88 +34,88 @@ export default function NinjaRecordDetailPage() {
   const [editingIntelId, setEditingIntelId] = useState<string | null>(null);
   const [editingIntelContent, setEditingIntelContent] = useState('');
 
-  const { data: record, isLoading } = useQuery({
-    queryKey: ['ninja-record', id],
-    queryFn: () => fetchNinjaRecord(id!),
+  const { data: investigation, isLoading } = useQuery({
+    queryKey: ['investigation', id],
+    queryFn: () => fetchInvestigation(id!),
     enabled: !!id,
   });
 
   const { data: intel } = useQuery({
-    queryKey: ['ninja-intel', id],
-    queryFn: () => fetchNinjaIntel(id!),
+    queryKey: ['investigation-intel', id],
+    queryFn: () => fetchInvestigationIntel(id!),
     enabled: !!id,
   });
 
   const { data: photos } = useQuery({
-    queryKey: ['ninja-photos', id],
-    queryFn: () => fetchNinjaPhotos(id!),
+    queryKey: ['investigation-photos', id],
+    queryFn: () => fetchInvestigationPhotos(id!),
     enabled: !!id,
   });
 
   const addIntelMutation = useMutation({
-    mutationFn: () => addNinjaIntel(id!, newIntel.trim()),
+    mutationFn: () => addInvestigationIntel(id!, newIntel.trim()),
     onSuccess: () => {
       toast.success('Information ajoutée');
       setNewIntel('');
-      queryClient.invalidateQueries({ queryKey: ['ninja-intel', id] });
+      queryClient.invalidateQueries({ queryKey: ['investigation-intel', id] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
   });
 
   const updateIntelMutation = useMutation({
     mutationFn: ({ intelId, content }: { intelId: string; content: string }) =>
-      updateNinjaIntel(intelId, content),
+      updateInvestigationIntel(intelId, content),
     onSuccess: () => {
       toast.success('Information modifiée');
       setEditingIntelId(null);
-      queryClient.invalidateQueries({ queryKey: ['ninja-intel', id] });
+      queryClient.invalidateQueries({ queryKey: ['investigation-intel', id] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
   });
 
   const deleteIntelMutation = useMutation({
-    mutationFn: (intelId: string) => deleteNinjaIntel(intelId),
+    mutationFn: (intelId: string) => deleteInvestigationIntel(intelId),
     onSuccess: () => {
       toast.success('Information supprimée');
-      queryClient.invalidateQueries({ queryKey: ['ninja-intel', id] });
+      queryClient.invalidateQueries({ queryKey: ['investigation-intel', id] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
   });
 
   const addPhotoMutation = useMutation({
-    mutationFn: () => addNinjaPhoto(id!, newPhotoUrl.trim()),
+    mutationFn: () => addInvestigationPhoto(id!, newPhotoUrl.trim()),
     onSuccess: () => {
       toast.success('Photo ajoutée');
       setNewPhotoUrl('');
       setShowPhotoInput(false);
-      queryClient.invalidateQueries({ queryKey: ['ninja-photos', id] });
+      queryClient.invalidateQueries({ queryKey: ['investigation-photos', id] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
   });
 
   const deleteRecordMutation = useMutation({
-    mutationFn: () => deleteNinjaRecord(id!),
+    mutationFn: () => deleteInvestigation(id!),
     onSuccess: () => {
-      toast.success('Casier supprimé');
-      queryClient.invalidateQueries({ queryKey: ['ninja-records'] });
-      navigate('/ninja-records');
+      toast.success('Enquête supprimée');
+      queryClient.invalidateQueries({ queryKey: ['investigations'] });
+      navigate('/investigations');
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
   });
 
   const statusMutation = useMutation({
-    mutationFn: (badge: StatusBadge | null) => updateStatusBadge(id!, badge),
+    mutationFn: (badge: StatusBadge | null) => updateInvestigationStatusBadge(id!, badge),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ninja-record', id] });
-      queryClient.invalidateQueries({ queryKey: ['ninja-records'] });
+      queryClient.invalidateQueries({ queryKey: ['investigation', id] });
+      queryClient.invalidateQueries({ queryKey: ['investigations'] });
     },
   });
 
-  if (isLoading || !record) {
+  if (isLoading || !investigation) {
     return (
       <div className="space-y-6">
-        <Link to="/ninja-records" className="text-sm text-text-secondary hover:text-accent transition-colors">
-          ← Retour aux casiers
+        <Link to="/investigations" className="text-sm text-text-secondary hover:text-accent transition-colors">
+          ← Retour aux enquêtes
         </Link>
         <div className="bg-surface border border-border p-8 text-center">
           <p className="text-sm text-text-muted">Chargement...</p>
@@ -137,30 +127,32 @@ export default function NinjaRecordDetailPage() {
   return (
     <div className="space-y-6">
       {/* Back link */}
-      <Link to="/ninja-records" className="inline-block text-sm text-text-secondary hover:text-accent transition-colors">
-        ← Retour aux casiers
+      <Link to="/investigations" className="inline-block text-sm text-text-secondary hover:text-accent transition-colors">
+        ← Retour aux enquêtes
       </Link>
 
       {/* Header Card */}
       <div className="bg-surface border border-border p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-5">
-            {/* Avatar */}
+            {/* Thumbnail */}
             <div className="w-24 h-24 bg-[#2a2a2a] border-2 border-[rgba(139,0,0,0.3)] shrink-0 overflow-hidden">
-              {record.photo_url ? (
-                <img src={record.photo_url} alt={record.name} className="w-full h-full object-cover" />
+              {investigation.photo_url ? (
+                <img src={investigation.photo_url} alt={investigation.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-text-muted text-3xl">
-                  <IconUser />
+                  <IconSearchLarge />
                 </div>
               )}
             </div>
             <div className="space-y-2">
-              <h1 className="text-[30px] font-bold text-text-primary leading-tight">{record.name}</h1>
+              <h1 className="text-[30px] font-bold text-text-primary leading-tight">{investigation.title}</h1>
               <div className="flex items-center gap-2 flex-wrap">
-                <VillageBadge village={record.village} />
-                <StatusBadgeComponent status={record.status_badge} />
+                <StatusBadgeComponent status={investigation.status_badge} />
               </div>
+              {investigation.description && (
+                <p className="text-sm text-text-secondary mt-2">{investigation.description}</p>
+              )}
             </div>
           </div>
 
@@ -194,12 +186,12 @@ export default function NinjaRecordDetailPage() {
                 key={badge ?? 'none'}
                 onClick={() => statusMutation.mutate(badge)}
                 className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs border transition-colors cursor-pointer ${
-                  record.status_badge === badge
+                  investigation.status_badge === badge
                     ? 'border-accent text-accent bg-accent/10'
                     : 'border-border text-text-secondary hover:border-accent/50'
                 }`}
               >
-                {badge === null ? 'Aucun' : badge === 'surveillance' ? <><IconCircle fill="#eab308" /> À surveiller</> : badge === 'traque' ? <><IconCircle fill="#ef4444" /> À traquer</> : <><IconCircle fill="#888" /> Mort</>}
+                {badge === null ? 'Aucun' : badge === 'surveillance' ? <><IconCircle fill="#eab308" /> À surveiller</> : badge === 'traque' ? <><IconCircle fill="#ef4444" /> À traquer</> : <><IconCircle fill="#888" /> Classé</>}
               </button>
             ))}
           </div>
@@ -368,14 +360,14 @@ export default function NinjaRecordDetailPage() {
       </div>
 
       {/* Edit Modal */}
-      {record && (
-        <EditNinjaModal
+      {investigation && (
+        <EditInvestigationModal
           open={editModalOpen}
           onClose={() => setEditModalOpen(false)}
-          record={record}
+          investigation={investigation}
           onSuccess={() => {
-            queryClient.invalidateQueries({ queryKey: ['ninja-record', id] });
-            queryClient.invalidateQueries({ queryKey: ['ninja-records'] });
+            queryClient.invalidateQueries({ queryKey: ['investigation', id] });
+            queryClient.invalidateQueries({ queryKey: ['investigations'] });
             setEditModalOpen(false);
           }}
         />
@@ -386,8 +378,8 @@ export default function NinjaRecordDetailPage() {
         open={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
         onConfirm={() => deleteRecordMutation.mutate()}
-        title="Supprimer le casier"
-        message={`Êtes-vous sûr de vouloir supprimer le casier de ${record.name} ? Cette action est irréversible.`}
+        title="Supprimer l'enquête"
+        message={`Êtes-vous sûr de vouloir supprimer l'enquête "${investigation.title}" ? Cette action est irréversible.`}
         confirmLabel="Supprimer"
         danger
       />
@@ -409,32 +401,40 @@ export default function NinjaRecordDetailPage() {
   );
 }
 
-function EditNinjaModal({
+function IconSearchLarge() {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+function EditInvestigationModal({
   open,
   onClose,
-  record,
+  investigation,
   onSuccess,
 }: {
   open: boolean;
   onClose: () => void;
-  record: { id: string; name: string; village: Village; photo_url: string | null; status_badge: StatusBadge | null };
+  investigation: { id: string; title: string; description: string | null; photo_url: string | null; status_badge: StatusBadge | null };
   onSuccess: () => void;
 }) {
-  const [name, setName] = useState(record.name);
-  const [village, setVillage] = useState<Village>(record.village);
-  const [photoUrl, setPhotoUrl] = useState(record.photo_url ?? '');
-  const [statusBadge, setStatusBadge] = useState<StatusBadge | ''>(record.status_badge ?? '');
+  const [title, setTitle] = useState(investigation.title);
+  const [description, setDescription] = useState(investigation.description ?? '');
+  const [photoUrl, setPhotoUrl] = useState(investigation.photo_url ?? '');
+  const [statusBadge, setStatusBadge] = useState<StatusBadge | ''>(investigation.status_badge ?? '');
 
   const mutation = useMutation({
     mutationFn: () =>
-      updateNinjaRecord(record.id, {
-        name: name.trim(),
-        village,
+      updateInvestigation(investigation.id, {
+        title: title.trim(),
+        description: description.trim() || null,
         photo_url: photoUrl.trim() || null,
         status_badge: statusBadge || null,
       }),
     onSuccess: () => {
-      toast.success('Casier modifié');
+      toast.success('Enquête modifiée');
       onSuccess();
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Erreur'),
@@ -442,32 +442,29 @@ function EditNinjaModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!title.trim()) return;
     mutation.mutate();
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Modifier le casier">
+    <Modal open={open} onClose={onClose} title="Modifier l'enquête">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-2">Nom du ninja</label>
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-2">Titre</label>
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             className="w-full bg-background border border-border px-3 py-2.5 text-sm text-text-primary"
           />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-2">Village</label>
-          <select
-            value={village}
-            onChange={(e) => setVillage(e.target.value as Village)}
-            className="w-full bg-background border border-border px-3 py-2.5 text-sm text-text-primary"
-          >
-            {VILLAGES.map((v) => (
-              <option key={v.value} value={v.value}>{v.label}</option>
-            ))}
-          </select>
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-2">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            className="w-full bg-background border border-border px-3 py-2.5 text-sm text-text-primary resize-none"
+          />
         </div>
         <div>
           <label className="block text-xs uppercase tracking-widest text-text-secondary mb-2">Photo (URL Imgur)</label>
@@ -488,7 +485,7 @@ function EditNinjaModal({
             <option value="">Aucun</option>
             <option value="surveillance">À surveiller</option>
             <option value="traque">À traquer</option>
-            <option value="mort">Personne morte</option>
+            <option value="mort">Classée</option>
           </select>
         </div>
         <div className="flex gap-3 justify-end pt-2">
@@ -501,7 +498,7 @@ function EditNinjaModal({
           </button>
           <button
             type="submit"
-            disabled={mutation.isPending || !name.trim()}
+            disabled={mutation.isPending || !title.trim()}
             className="px-4 py-2 text-sm bg-accent hover:bg-accent-hover disabled:opacity-50 text-white transition-colors cursor-pointer"
           >
             {mutation.isPending ? 'Enregistrement...' : 'Enregistrer'}

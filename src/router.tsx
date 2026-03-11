@@ -10,7 +10,10 @@ import PendingPage from '@/pages/auth/pending-page';
 import DashboardPage from '@/pages/dashboard/dashboard-page';
 import NinjaRecordsPage from '@/pages/ninja-records/ninja-records-page';
 import NinjaRecordDetailPage from '@/pages/ninja-records/ninja-record-detail-page';
+import InvestigationsPage from '@/pages/investigations/investigations-page';
+import InvestigationDetailPage from '@/pages/investigations/investigation-detail-page';
 import MyReportsPage from '@/pages/reports/my-reports-page';
+import SettingsPage from '@/pages/settings/settings-page';
 import AccountsPage from '@/pages/admin/accounts-page';
 import CodesPage from '@/pages/admin/codes-page';
 import AdminReportsPage from '@/pages/admin/admin-reports-page';
@@ -43,7 +46,10 @@ export const router = createBrowserRouter([
           { path: '/', element: <DashboardPage /> },
           { path: '/ninja-records', element: <NinjaRecordsPage /> },
           { path: '/ninja-records/:id', element: <NinjaRecordDetailPage /> },
+          { path: '/investigations', element: <InvestigationsPage /> },
+          { path: '/investigations/:id', element: <InvestigationDetailPage /> },
           { path: '/my-reports', element: <MyReportsPage /> },
+          { path: '/settings', element: <SettingsPage /> },
 
           // Chef ANBU only
           {

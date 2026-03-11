@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/auth-store';
 import { fetchNinjaRecords } from '@/services/ninja-records';
+import { fetchInvestigations } from '@/services/investigations';
 import { fetchMyReports } from '@/services/reports';
 import { fetchUsers } from '@/services/admin';
 import { SectionHeader } from '@/components/ui';
@@ -12,6 +13,11 @@ export default function DashboardPage() {
   const { data: records } = useQuery({
     queryKey: ['ninja-records'],
     queryFn: fetchNinjaRecords,
+  });
+
+  const { data: investigations } = useQuery({
+    queryKey: ['investigations'],
+    queryFn: fetchInvestigations,
   });
 
   const { data: reports } = useQuery({
@@ -40,9 +46,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Link to="/ninja-records" className="group">
           <StatCard label="Casiers Ninjas" value={String(records?.length ?? '—')} />
+        </Link>
+        <Link to="/investigations" className="group">
+          <StatCard label="Enquêtes" value={String(investigations?.length ?? '—')} />
         </Link>
         <Link to="/my-reports" className="group">
           <StatCard label="Mes Rapports" value={String(reports?.length ?? '—')} />
@@ -79,6 +88,31 @@ export default function DashboardPage() {
             </div>
           ) : (
             <p className="p-6 text-sm text-text-muted text-center">Aucun casier enregistré.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Recent investigations */}
+      <div className="space-y-4">
+        <SectionHeader title="Dernières enquêtes" />
+        <div className="bg-surface border border-border">
+          {investigations && investigations.length > 0 ? (
+            <div className="divide-y divide-border">
+              {investigations.slice(0, 5).map((inv) => (
+                <Link
+                  key={inv.id}
+                  to={`/investigations/${inv.id}`}
+                  className="flex items-center justify-between px-5 py-3 hover:bg-surface-light transition-colors"
+                >
+                  <span className="text-sm text-text-primary">{inv.title}</span>
+                  <span className="text-xs text-text-muted">
+                    {new Date(inv.created_at).toLocaleDateString('fr-FR')}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="p-6 text-sm text-text-muted text-center">Aucune enquête enregistrée.</p>
           )}
         </div>
       </div>
